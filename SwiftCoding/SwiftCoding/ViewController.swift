@@ -9,18 +9,18 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
+    
+    
     @IBAction func showAlert(sender: AnyObject) {
         
         let boAlertView = BOAlertView.init(title: "Title", contentText: "helloleft block actionleft block actionleft block actionleft block actionleft block actionhelloleft block actionleft block actionleft block actionleft block actionleft block actionhelloleft block actionleft block actionleft block actionleft block actionleft block action", leftTitle: "Cancel", rightTitle: "OK")
@@ -33,6 +33,11 @@ class ViewController: UIViewController {
         }
         boAlertView.dismissBlock = {
             print("dismissBlock action")
+        }
+        
+        //-------------------2016.4.21 By Lorin
+        boAlertView.leftClosure = { (btn) in
+            print("this is left button action, button is \(btn)")
         }
     }
 }

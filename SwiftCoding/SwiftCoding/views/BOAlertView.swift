@@ -9,11 +9,14 @@
 import UIKit
 
 class BOAlertView: UIView {
-
+    
     private var alertTitleLabel: UILabel!
     private var alertContentLabel: UILabel!
     private var leftBtn: UIButton!
     private var rightBtn: UIButton!
+    
+    //-------------------2016.4.21 By Lorin
+    // 初始化方法可以省去.init，如view = UIView()，看个人习惯
     lazy private var backgroundView: UIView = UIView.init()
     
     // MARK: constant
@@ -30,6 +33,12 @@ class BOAlertView: UIView {
     var leftBlock: dispatch_block_t!
     var rightBlock: dispatch_block_t!
     var dismissBlock: dispatch_block_t!
+    
+    //-------------------2016.4.21 By Lorin
+    // 自定义带参数的block可以这样写，关键字swift closure
+    var leftClosure: ((btn: UIButton) -> Void)?
+    var rightClosure: ((btn: UIButton) -> Void)?
+    var dissmissClosure: (() -> Void)?
     
     override init(frame: CGRect) {
         alertTitleLabel = UILabel.init()
@@ -115,9 +124,18 @@ class BOAlertView: UIView {
     @objc private func leftBtnClicked(sender: UIButton) {
         _leftLeave = true
         self.dismissAlert()
-        if let theLeftBlock = leftBlock {
-            theLeftBlock()
+        /*
+         if let theLeftBlock = leftBlock {
+         theLeftBlock()
+         }
+         */
+        
+        //-------------------2016.4.21 By Lorin
+        // ?修饰的可直接拿nil判断
+        if self.leftClosure != nil {
+            self.leftClosure!(btn: sender)
         }
+        
     }
     
     @objc private func rightBtnClicked(sender: UIButton) {
@@ -162,7 +180,7 @@ class BOAlertView: UIView {
         let sharedWindow = UIApplication.sharedApplication().keyWindow
         let afterFrame = CGRectMake((CGRectGetWidth(sharedWindow!.bounds) - kAlertWidth) * 0.5, CGRectGetHeight(sharedWindow!.bounds), kAlertWidth, kAlertHeight);
         
-        UIView.animateWithDuration(0.25, delay: 0.0, options: .CurveEaseInOut, animations: { 
+        UIView.animateWithDuration(0.25, delay: 0.0, options: .CurveEaseInOut, animations: {
             self.frame = afterFrame
             if self._leftLeave {
                 self.transform = CGAffineTransformMakeRotation((CGFloat)(-M_1_PI / 1.5))
@@ -170,7 +188,7 @@ class BOAlertView: UIView {
                 self.transform = CGAffineTransformMakeRotation((CGFloat)(M_1_PI) / 1.5)
             }
         }) { (finished) in
-              super.removeFromSuperview()
+            super.removeFromSuperview()
         }
     }
 }
